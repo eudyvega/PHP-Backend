@@ -23,7 +23,9 @@ class textPainter{
     private $fontFile;
     private $fontSize;
     private $format;
-
+	
+	private $paddingBottom;
+	private $paddingRight;
 
     /**
      * Class Constructor
@@ -32,14 +34,18 @@ class textPainter{
      * @param string $text text to print
      * @param string $fontFile the .ttf font file (TrueType)
      * @param integer $fontSize font size
+	 * @param integer $paddingBottom
+	 * @param integer $paddingRight
      *
      * @access public
      */
-    public function __construct($imagePath, $text, $fontFile, $fontSize){
+    public function __construct($imagePath, $text, $fontFile, $fontSize, $paddingBottom=0, $paddingRight=0){
         $this->imagePath = $imagePath;
         $this->text = $text;
         $this->fontFile = $fontFile;
         $this->fontSize = $fontSize;
+		$this->paddingBottom = $paddingBottom;
+        $this->paddingRight = $paddingRight;
 
         $this->setFormat();
         $this->setQuality();
@@ -73,7 +79,7 @@ class textPainter{
 
         switch ($this->format){
             case "JPEG":
-                imagejpeg($this->img, NULL, $this->jpegQuality);
+				imagejpeg($this->img, NULL, $this->jpegQuality);
                 break;
             case "PNG":
                 imagepng($this->img);
@@ -107,7 +113,7 @@ class textPainter{
             $this->startPosition["x"] = imagesx($this->img)/2 - $dimensions["width"]/2;
         }
         else if($x=="right"){
-            $this->startPosition["x"] = imagesx($this->img) - $dimensions["width"];
+            $this->startPosition["x"] = imagesx($this->img) - $dimensions["width"] - $this->paddingRight;
         }
         //custom
         else{
@@ -121,7 +127,7 @@ class textPainter{
             $this->startPosition["y"]  = imagesy($this->img)/2 + $dimensions["heigh"]/2;
         }
         else if($y=="bottom"){
-            $this->startPosition["y"]  = imagesy($this->img);
+            $this->startPosition["y"]  = imagesy($this->img) - $this->paddingBottom;
         }
         //custom
         else{
@@ -213,4 +219,26 @@ class textPainter{
             'heigh' => $maxY - $minY
         );
     }
+	
+	/**
+	* Set de Padding Bottom to display the text
+	*
+	* @param integer $paddingBottom
+    * @access public
+	*/
+	function setPaddingBottom($paddingBottom)
+	{
+		$this->paddingBottom = $paddingBottom;
+	}
+	
+	/**
+	* Set de Padding Right to display the text
+	*
+	* @param integer $paddingRight
+    * @access public
+	*/
+	function setPaddingRight($paddingRight)
+	{
+		$this->paddingRight = $paddingRight;
+	}
 }
